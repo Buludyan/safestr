@@ -1,0 +1,11 @@
+.btns {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    &__inner {
+        width: 50%;
+        display: flex;
+        justify-content: space-around;
+    }
+}

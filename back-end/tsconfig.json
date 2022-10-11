@@ -1,0 +1,31 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "esModuleInterop": false,
+    "target": "es2020",
+    "module": "commonjs",
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "lib": ["es2020"],
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types"],
+    "declarationMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": false,
+    "pretty": false,
+    "noErrorTruncation": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
+}
