@@ -82,7 +82,7 @@ export namespace CoreDynamoDb {
         },
         async (err: AWSError): Promise<void | null> => {
           if (err.code === 'ResourceNotFoundException') {
-            log.error(`Table ${this.tableName} is not found`);
+            log.info(`Table ${this.tableName} is not found`);
             return;
           }
           return null;

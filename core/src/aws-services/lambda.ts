@@ -88,7 +88,11 @@ export namespace CoreLambda {
             };
           await lambdaClient.deleteFunction(deleteFunctionRequest).promise();
         },
-        async () => {
+        async err => {
+          if (err.code === `ResourceNotFoundException`) {
+            log.info(`Lambda ${this.functionName} already destroyed`);
+            return;
+          }
           return null;
         }
       );

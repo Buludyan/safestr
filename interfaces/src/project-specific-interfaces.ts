@@ -3,52 +3,20 @@ export namespace InterfacesProjectSpecificInterfaces {
     _guard: TypeGuard;
   }
 
-  export const videoOriginalNameTypeGuard: 'videoOriginalNameTypeGuard' =
-    'videoOriginalNameTypeGuard';
+  export const countersTypeGuard: 'countersTypeGuard' = 'countersTypeGuard';
 
-  export interface IVideoOriginalName
-    extends IGuard<typeof videoOriginalNameTypeGuard> {
-    videoOriginalName: string;
+  export interface ICounters extends IGuard<typeof countersTypeGuard> {
+    lastJSON: number;
+    lastCount: number;
+    lastProc: number;
   }
 
-  export const newVideoOriginalName = (
-    videoOriginalName: string
-  ): IVideoOriginalName => {
+  export const newCounters = (): ICounters => {
     return {
-      _guard: videoOriginalNameTypeGuard,
-      videoOriginalName: videoOriginalName,
-    };
-  };
-
-  export const videoHashNameTypeGuard: 'videoHashNameTypeGuard' =
-    'videoHashNameTypeGuard';
-
-  export interface IVideoHashName
-    extends IGuard<typeof videoHashNameTypeGuard> {
-    videoHashName: string;
-  }
-
-  export const newVideoHashName = (videoHashName: string): IVideoHashName => {
-    return {
-      _guard: videoHashNameTypeGuard,
-      videoHashName,
-    };
-  };
-
-  export const subtitleSignedUrlTypeGuard: 'subtitleSignedUrlTypeGuard' =
-    'subtitleSignedUrlTypeGuard';
-
-  export interface ISubtitleSignedUrl
-    extends IGuard<typeof subtitleSignedUrlTypeGuard> {
-    subtitleSignedUrl: string;
-  }
-
-  export const newSubtitleSignedUrl = (
-    subtitleSignedUrl: string
-  ): ISubtitleSignedUrl => {
-    return {
-      _guard: subtitleSignedUrlTypeGuard,
-      subtitleSignedUrl,
+      _guard: countersTypeGuard,
+      lastJSON: 0,
+      lastCount: 0,
+      lastProc: 0,
     };
   };
 }
