@@ -31,7 +31,7 @@ export namespace CoreS3Bucket {
         },
         async (err: AWSError): Promise<void | null> => {
           if (err.code === 'BucketAlreadyOwnedByYou') {
-            log.error(
+            log.info(
               `Bucket ${this.bucketName} already owned by you, skipping creation.`
             );
             return;

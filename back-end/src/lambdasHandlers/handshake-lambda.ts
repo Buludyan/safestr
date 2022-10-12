@@ -3,11 +3,13 @@ import {CoreDynamoDb} from 'core';
 import {InterfacesProjectSpecificInterfaces} from 'interfaces';
 import {InterfacesProjectSpecificConstants} from 'interfaces';
 import {CoreLog} from 'core';
+import md5 = require('md5');
 
 export namespace BackEndHandshakeLambda {
   import ICounters = InterfacesProjectSpecificInterfaces.ICounters;
   import countersTypeGuard = InterfacesProjectSpecificInterfaces.countersTypeGuard;
   import newCounters = InterfacesProjectSpecificInterfaces.newCounters;
+  import newToken = InterfacesProjectSpecificInterfaces.newToken;
   import KeyValueStore = CoreDynamoDb.KeyValueStore;
   import countersDynamoTableName = InterfacesProjectSpecificConstants.countersDynamoTableName;
   import log = CoreLog.log;
@@ -22,14 +24,13 @@ export namespace BackEndHandshakeLambda {
         countersTypeGuard
       );
 
-      const token = 'example-token';
-      const initialCounters: ICounters = newCounters();
-
-      await myTable.putRecord(token, initialCounters);
+      // TODO: what if same millisecond?
+      const token = md5(Date.now().toString());
+      await myTable.putRecord(token, newCounters());
 
       return {
         statusCode: 200,
-        body: JSON.stringify(token),
+        body: JSON.stringify(newToken(token)),
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Headers': 'Content-Type',
