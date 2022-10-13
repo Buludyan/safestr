@@ -59,14 +59,19 @@ export namespace InterfacesProjectSpecificInterfaces {
   export const imagePayloadTypeGuard: 'imagePayloadTypeGuard' =
     'imagePayloadTypeGuard';
 
+  export interface IImageContent {
+    content: string;
+    name: string;
+  }
+
   export interface IImagePayload extends IGuard<typeof imagePayloadTypeGuard> {
     token: IToken;
-    imageContent: string;
+    imageContent: IImageContent;
   }
 
   export const newImagePayload = (
     token: IToken,
-    imageContent: string
+    imageContent: IImageContent
   ): IImagePayload => {
     return {
       _guard: imagePayloadTypeGuard,

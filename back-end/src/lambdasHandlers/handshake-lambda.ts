@@ -19,14 +19,14 @@ export namespace BackEndHandshakeLambda {
 
   export const handshake = async (): Promise<APIGatewayProxyResult> => {
     try {
-      const myTable = new KeyValueStore<ICounters>(
+      const countersDynamoTable = new KeyValueStore<ICounters>(
         countersDynamoTableName,
         countersTypeGuard
       );
 
       // TODO: what if same millisecond?
       const token = md5(Date.now().toString());
-      await myTable.putRecord(token, newCounters());
+      await countersDynamoTable.putRecord(token, newCounters());
 
       return {
         statusCode: 200,
