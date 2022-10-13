@@ -37,6 +37,7 @@ export namespace BackEndUploadLambda {
       }
       const body = JSON.parse(event.body);
       makeSureThatXIs<IImagePayload>(body, imagePayloadTypeGuard);
+
       const countersDynamoTable = new CounterStore(countersDynamoTableName);
       const counterIncrementsRequestObject = newCounterIncrements({
         imageIndexIncrement: 1,
@@ -44,17 +45,22 @@ export namespace BackEndUploadLambda {
         processedImageIndexIncrement: 0,
       });
 
-      const response = await countersDynamoTable.incrementCounters(
+      const counters = await countersDynamoTable.incrementCounters(
         body.token.token,
         counterIncrementsRequestObject
       );
 
       const inputBucket: S3Bucket = new S3Bucket(inputBucketName);
-      inputBucket.sendFile(body.imageContent.name, 'path', 'image/png', true);
+      inputBucket.sendFileWithContent(
+        `${body.token.token}/${counters.lastImageIndexToAdd}.png`,
+        body.imageContent,
+        'image/png',
+        false
+      );
 
       return {
         statusCode: 200,
-        body: JSON.stringify(response.lastImageIndexToAdd),
+        body: JSON.stringify(counters.lastImageIndexToAdd),
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Headers': 'Content-Type',

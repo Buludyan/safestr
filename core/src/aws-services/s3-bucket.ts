@@ -87,6 +87,32 @@ export namespace CoreS3Bucket {
       );
     };
 
+    readonly sendFileWithContent = async (
+      fileName: string,
+      fileContent: string,
+      contentType: string,
+      publicAccess: boolean
+    ): Promise<void> => {
+      log.info(`Sending file ${fileName} to s3 bucket ${this.bucketName}`);
+      return await awsCommand(
+        async (): Promise<void> => {
+          const putObjectReq: AWS.S3.PutObjectRequest = {
+            Bucket: this.bucketName,
+            Key: fileName,
+            Body: fileContent,
+            ContentType: contentType,
+            ACL: publicAccess ? 'public-read' : 'bucket-owner-full-control',
+          };
+          await s3Client.putObject(putObjectReq).promise();
+
+          log.info(`File sent ${fileName} to s3 bucket ${this.bucketName}`);
+        },
+        async (): Promise<void | null> => {
+          return null;
+        }
+      );
+    };
+
     readonly setAclToFile = async (
       fileName: string,
       publicAccess: boolean

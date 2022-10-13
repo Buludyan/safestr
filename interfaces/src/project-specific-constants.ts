@@ -1,6 +1,6 @@
 export namespace InterfacesProjectSpecificConstants {
   export const countersDynamoTableName = 'counters';
-  export const inputBucketName = 'inputBucket';
+  export const inputBucketName = 'safestr-input-bucket';
   export const handshakeLambdaName = 'handshakeLambda';
   export const uploadLambdaName = 'uploadLambda';
   export const apiGatewayName = 'safestr';
