@@ -150,11 +150,12 @@ export namespace BackEndCounterStore {
             Key: {
               hashKey: hashKey,
             },
-            UpdateExpression: `set #lastInfoJsonIndex = #lastInfoJsonIndex + :infoJsonIndexIncrement,
-            #lastImageIndexToAdd = #lastImageIndexToAdd + :imageIndexIncrement,
-            #lastProcessedImageIndex = #lastProcessedImageIndex + :processedImageIndexIncrement`,
+            UpdateExpression: `set #record.#lastInfoJsonIndex = #record.#lastInfoJsonIndex + :infoJsonIndexIncrement,
+            #record.#lastImageIndexToAdd = #record.#lastImageIndexToAdd + :imageIndexIncrement,
+            #record.#lastProcessedImageIndex = #record.#lastProcessedImageIndex + :processedImageIndexIncrement`,
 
             ExpressionAttributeNames: {
+              '#record': 'record',
               '#lastInfoJsonIndex': 'lastInfoJsonIndex',
               '#lastImageIndexToAdd': 'lastImageIndexToAdd',
               '#lastProcessedImageIndex': 'lastProcessedImageIndex',
@@ -175,8 +176,11 @@ export namespace BackEndCounterStore {
             .promise();
           log.info(`Item ${hashKey} is incremented`);
           throwIfUndefined(response.Attributes);
-          makeSureThatXIs<ICounters>(response.Attributes, countersTypeGuard);
-          return response.Attributes;
+          makeSureThatXIs<ICounters>(
+            response.Attributes.record,
+            countersTypeGuard
+          );
+          return response.Attributes.record;
         },
         async (): Promise<ICounters | null> => {
           return null;

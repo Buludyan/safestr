@@ -95,6 +95,16 @@ const demolish = async () => {
   );
   await handshakeLambda.destroy();
 
+  const uploadLambda: Lambda = new Lambda(
+    uploadLambdaName,
+    // TODO: getRidOfParams
+    '/',
+    '/',
+    uploadLamdaHandler,
+    60
+  );
+  await uploadLambda.destroy();
+
   const apiGateway = new ApiGateway(apiGatewayName);
   await apiGateway.destroy();
 

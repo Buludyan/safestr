@@ -3,7 +3,7 @@ import {InterfacesProjectSpecificInterfaces as Interfaces} from 'interfaces';
 import axios, {AxiosResponse} from 'axios';
 
 const Axios = axios.create({
-  baseURL: `https://xec1xngxxf.execute-api.eu-central-1.amazonaws.com/safestr`,
+  baseURL: `https://f0wxhv7p3d.execute-api.eu-central-1.amazonaws.com/safestr`,
 });
 
 export const safestrApi = {
