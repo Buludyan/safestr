@@ -1,5 +1,3 @@
-import {InterfacesProjectSpecificConstants} from 'interfaces';
-
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {InitialState} from '../Interfaces/Interfaces';
@@ -10,7 +8,7 @@ const initialState: InitialState = {
   isWebcamOn: false,
   videoBlob: null,
   videoFile: null,
-  videoName: InterfacesProjectSpecificConstants.webcamVideoName,
+  videoName: '',
   videoUri: null,
   isUploading: false,
   isInProcess: false,

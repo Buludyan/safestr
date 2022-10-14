@@ -21,7 +21,6 @@
     "axios": "^0.27.2",
     "browserify-zlib": "^0.2.0",
     "constants-browserify": "^1.0.0",
-    "core": "file:../core",
     "file-saver": "^2.0.5",
     "gts": "^3.1.0",
     "interfaces": "file:../interfaces",

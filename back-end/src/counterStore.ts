@@ -152,7 +152,7 @@ export namespace BackEndCounterStore {
             },
             UpdateExpression: `set #lastInfoJsonIndex = #lastInfoJsonIndex + :infoJsonIndexIncrement,
             #lastImageIndexToAdd = #lastImageIndexToAdd + :imageIndexIncrement,
-            #lastProcessedImageIndex = #lastProcessedImageIndex + :processedImageIndexIncrement,`,
+            #lastProcessedImageIndex = #lastProcessedImageIndex + :processedImageIndexIncrement`,
 
             ExpressionAttributeNames: {
               '#lastInfoJsonIndex': 'lastInfoJsonIndex',

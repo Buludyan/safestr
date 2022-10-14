@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,OAAO,CAAC;EACN,iBAAiB,EAAE,UAAU;EAC7B,SAAS,EAAE,UAAU;CAStB;;AAPE,AAAD,cAAQ,CAAC;EACP,MAAM,EAAE,cAAc;CACvB;;AAEA,AAAD,YAAM,CAAC;EACL,MAAM,EAAE,aAAa;CACtB",
-    "sources": [
-        "VideoStream.scss"
-    ],
-    "names": [],
-    "file": "VideoStream.css"
-}

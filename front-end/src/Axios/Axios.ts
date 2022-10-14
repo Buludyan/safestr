@@ -3,19 +3,15 @@ import {InterfacesProjectSpecificInterfaces as Interfaces} from 'interfaces';
 import axios, {AxiosResponse} from 'axios';
 
 const Axios = axios.create({
-  baseURL: `https://dr00fm796h.execute-api.eu-central-1.amazonaws.com/subtractor`,
+  baseURL: `https://xec1xngxxf.execute-api.eu-central-1.amazonaws.com/safestr`,
 });
 
-export const subtractorApi = {
-  prepare(data: Interfaces.IVideoOriginalName): Promise<AxiosResponse> {
-    return Axios.post('/prepare', data);
+export const safestrApi = {
+  upload(data: Interfaces.IImagePayload): Promise<AxiosResponse> {
+    return Axios.post('/upload', data);
   },
 
-  process(data: Interfaces.IVideoHashName): Promise<AxiosResponse> {
-    return Axios.post('/process', data);
-  },
-
-  download(data: Interfaces.IVideoHashName): Promise<AxiosResponse> {
-    return Axios.post('/download', data);
+  handshake(): Promise<AxiosResponse> {
+    return Axios.post('/handshake');
   },
 };

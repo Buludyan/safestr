@@ -109,8 +109,8 @@ const main = async () => {
   await demolish();
   await sleep(5000);
   await initiate();
-  await sleep(600000);
-  await demolish();
+  //await sleep(600000);
+  //await demolish();
 };
 
 main().catch(err => log.error(`Something bad happened: ${err}`));
