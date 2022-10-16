@@ -3,6 +3,7 @@ import {BackEndUploadLambda} from './lambdasHandlers/upload-lambda';
 import {CoreS3Bucket} from 'core';
 import {CoreDynamoDb} from 'core';
 import {CoreCommonUtils} from 'core';
+import {CoreRekognition} from 'core';
 import {
   InterfacesProjectSpecificInterfaces,
   InterfacesProjectSpecificConstants,
@@ -29,6 +30,8 @@ import apiGatewayName = InterfacesProjectSpecificConstants.apiGatewayName;
 import S3Bucket = CoreS3Bucket.S3Bucket;
 import Lambda = CoreLambda.Lambda;
 import ApiGateway = CoreApiGateway.ApiGateway;
+import Rekognition = CoreRekognition.Rekognition;
+import DetectProtectiveEquipmentResult = CoreRekognition.DetectProtectiveEquipmentResult;
 
 log.info(`Compilation passed successfully!`);
 
@@ -116,11 +119,22 @@ const demolish = async () => {
 };
 
 const main = async () => {
-  await demolish();
-  await sleep(5000);
-  await initiate();
-  //await sleep(600000);
-  //await demolish();
+  // await demolish();
+  // await sleep(5000);
+  // await initiate();
+  // await sleep(600000);
+  // await demolish();
+  const rekognition = new Rekognition();
+  rekognition.construct();
+  const detectProtectiveEquipmentResult =
+    await rekognition.detectProtectiveEquipment(
+      inputBucketName,
+      `e3dcaa0f9dc1b4d19de8cd76e6c6081b/3.jpg`,
+      ['FACE_COVER', 'HAND_COVER', 'HEAD_COVER'],
+      90
+    );
+  log.info(JSON.stringify(detectProtectiveEquipmentResult));
+  rekognition.destroy();
 };
 
 main().catch(err => log.error(`Something bad happened: ${err}`));

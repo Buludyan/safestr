@@ -7,5 +7,6 @@ export * from './aws-services/lambda';
 export * from './aws-services/s3-bucket';
 export * from './aws-services/sqs';
 export * from './aws-services/transcribe';
+export * from './aws-services/rekognition';
 export * from './utilities/common-utils';
 export * from './utilities/log';
