@@ -12,10 +12,10 @@ export namespace BackEndCounterStore {
   import awsCommand = CoreAwsCommonUtils.awsCommand;
   import log = CoreLog.log;
   import AwsService = CoreAwsService.AwsService;
-  import ICounters = InterfacesProjectSpecificInterfaces.ICounters;
-  import countersTypeGuard = InterfacesProjectSpecificInterfaces.countersTypeGuard;
-  import newCounters = InterfacesProjectSpecificInterfaces.newCounters;
-  import ICounterIncrements = InterfacesProjectSpecificInterfaces.ICounterIncrements;
+  import ICounter = InterfacesProjectSpecificInterfaces.ICounter;
+  import counterTypeGuard = InterfacesProjectSpecificInterfaces.counterTypeGuard;
+  import newCounter = InterfacesProjectSpecificInterfaces.newCounter;
+  import ICounterIncrement = InterfacesProjectSpecificInterfaces.ICounterIncrement;
 
   const dynamoClient: AWS.DynamoDB = new AWS.DynamoDB({
     apiVersion: '2012-08-10',
@@ -93,7 +93,7 @@ export namespace BackEndCounterStore {
           const putItemInput: AWS.DynamoDB.DocumentClient.PutItemInput = {
             Item: {
               hashKey: hashKey,
-              record: newCounters(),
+              record: newCounter(),
             },
             TableName: this.tableName,
             ConditionExpression: 'not (attribute_exists(hashKey))',
@@ -111,9 +111,9 @@ export namespace BackEndCounterStore {
         }
       );
     };
-    readonly getCounters = async (hashKey: string): Promise<ICounters> => {
+    readonly getCounter = async (hashKey: string): Promise<ICounter> => {
       return await awsCommand(
-        async (): Promise<ICounters> => {
+        async (): Promise<ICounter> => {
           const getItemInput: AWS.DynamoDB.DocumentClient.GetItemInput = {
             Key: {
               hashKey: hashKey,
@@ -125,24 +125,24 @@ export namespace BackEndCounterStore {
           log.info(`Successfully get ${JSON.stringify(response.Item)}`);
           throwIfUndefined(response.Item);
           const record = response.Item.record;
-          makeSureThatXIs<ICounters>(record, countersTypeGuard);
+          makeSureThatXIs<ICounter>(record, counterTypeGuard);
           return record;
         },
-        async (): Promise<ICounters | null> => {
+        async (): Promise<ICounter | null> => {
           return null;
         }
       );
     };
 
-    readonly incrementCounters = async (
+    readonly incrementCounter = async (
       hashKey: string,
-      countersIncrement: ICounterIncrements
-    ): Promise<ICounters> => {
+      counterIncrement: ICounterIncrement
+    ): Promise<ICounter> => {
       return await awsCommand(
-        async (): Promise<ICounters> => {
+        async (): Promise<ICounter> => {
           log.info(
             `Incrementing item ${hashKey} with ${JSON.stringify(
-              countersIncrement
+              counterIncrement
             )}`
           );
           const updateItemReq: AWS.DynamoDB.DocumentClient.UpdateItemInput = {
@@ -150,22 +150,14 @@ export namespace BackEndCounterStore {
             Key: {
               hashKey: hashKey,
             },
-            UpdateExpression: `set #record.#lastInfoJsonIndex = #record.#lastInfoJsonIndex + :infoJsonIndexIncrement,
-            #record.#lastImageIndexToAdd = #record.#lastImageIndexToAdd + :imageIndexIncrement,
-            #record.#lastProcessedImageIndex = #record.#lastProcessedImageIndex + :processedImageIndexIncrement`,
+            UpdateExpression: `set #record.#lastImageIndexToAdd = #record.#lastImageIndexToAdd + :imageIndexIncrement`,
 
             ExpressionAttributeNames: {
               '#record': 'record',
-              '#lastInfoJsonIndex': 'lastInfoJsonIndex',
               '#lastImageIndexToAdd': 'lastImageIndexToAdd',
-              '#lastProcessedImageIndex': 'lastProcessedImageIndex',
             },
             ExpressionAttributeValues: {
-              ':infoJsonIndexIncrement':
-                countersIncrement.infoJsonIndexIncrement,
-              ':imageIndexIncrement': countersIncrement.imageIndexIncrement,
-              ':processedImageIndexIncrement':
-                countersIncrement.processedImageIndexIncrement,
+              ':imageIndexIncrement': counterIncrement.imageIndexIncrement,
             },
             ConditionExpression: 'attribute_exists(hashKey)',
             ReturnValues: 'ALL_NEW',
@@ -176,13 +168,13 @@ export namespace BackEndCounterStore {
             .promise();
           log.info(`Item ${hashKey} is incremented`);
           throwIfUndefined(response.Attributes);
-          makeSureThatXIs<ICounters>(
+          makeSureThatXIs<ICounter>(
             response.Attributes.record,
-            countersTypeGuard
+            counterTypeGuard
           );
           return response.Attributes.record;
         },
-        async (): Promise<ICounters | null> => {
+        async (): Promise<ICounter | null> => {
           return null;
         }
       );

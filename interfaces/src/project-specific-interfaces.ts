@@ -3,43 +3,33 @@ export namespace InterfacesProjectSpecificInterfaces {
     _guard: TypeGuard;
   }
 
-  export const countersTypeGuard: 'countersTypeGuard' = 'countersTypeGuard';
+  export const counterTypeGuard: 'counterTypeGuard' = 'counterTypeGuard';
 
-  export interface ICounters extends IGuard<typeof countersTypeGuard> {
-    lastInfoJsonIndex: number;
+  export interface ICounter extends IGuard<typeof counterTypeGuard> {
     lastImageIndexToAdd: number;
-    lastProcessedImageIndex: number;
   }
 
-  export const newCounters = (): ICounters => {
+  export const newCounter = (): ICounter => {
     return {
-      _guard: countersTypeGuard,
-      lastInfoJsonIndex: 0,
+      _guard: counterTypeGuard,
       lastImageIndexToAdd: 0,
-      lastProcessedImageIndex: 0,
     };
   };
 
-  export const counterIncrementsTypeGuard: 'counterIncrementsTypeGuard' =
-    'counterIncrementsTypeGuard';
+  export const counterIncrementTypeGuard: 'counterIncrementTypeGuard' =
+    'counterIncrementTypeGuard';
 
-  export interface ICounterIncrements
-    extends IGuard<typeof counterIncrementsTypeGuard> {
-    infoJsonIndexIncrement: number;
+  export interface ICounterIncrement
+    extends IGuard<typeof counterIncrementTypeGuard> {
     imageIndexIncrement: number;
-    processedImageIndexIncrement: number;
   }
 
-  export const newCounterIncrements = (increment: {
-    infoJsonIndexIncrement: number;
+  export const newCounterIncrement = (increment: {
     imageIndexIncrement: number;
-    processedImageIndexIncrement: number;
-  }): ICounterIncrements => {
+  }): ICounterIncrement => {
     return {
-      _guard: counterIncrementsTypeGuard,
-      infoJsonIndexIncrement: increment.infoJsonIndexIncrement,
+      _guard: counterIncrementTypeGuard,
       imageIndexIncrement: increment.imageIndexIncrement,
-      processedImageIndexIncrement: increment.processedImageIndexIncrement,
     };
   };
 

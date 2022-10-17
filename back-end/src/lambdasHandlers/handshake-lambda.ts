@@ -6,12 +6,12 @@ import {CoreLog} from 'core';
 import md5 = require('md5');
 
 export namespace BackEndHandshakeLambda {
-  import ICounters = InterfacesProjectSpecificInterfaces.ICounters;
-  import countersTypeGuard = InterfacesProjectSpecificInterfaces.countersTypeGuard;
-  import newCounters = InterfacesProjectSpecificInterfaces.newCounters;
+  import ICounter = InterfacesProjectSpecificInterfaces.ICounter;
+  import counterTypeGuard = InterfacesProjectSpecificInterfaces.counterTypeGuard;
+  import newCounter = InterfacesProjectSpecificInterfaces.newCounter;
   import newToken = InterfacesProjectSpecificInterfaces.newToken;
   import KeyValueStore = CoreDynamoDb.KeyValueStore;
-  import countersDynamoTableName = InterfacesProjectSpecificConstants.countersDynamoTableName;
+  import counterDynamoTableName = InterfacesProjectSpecificConstants.counterDynamoTableName;
   import log = CoreLog.log;
 
   export const handshakeLambdaHandler =
@@ -19,14 +19,14 @@ export namespace BackEndHandshakeLambda {
 
   export const handshake = async (): Promise<APIGatewayProxyResult> => {
     try {
-      const countersDynamoTable = new KeyValueStore<ICounters>(
-        countersDynamoTableName,
-        countersTypeGuard
+      const countersDynamoTable = new KeyValueStore<ICounter>(
+        counterDynamoTableName,
+        counterTypeGuard
       );
 
       // TODO: what if same millisecond?
       const token = md5(Date.now().toString());
-      await countersDynamoTable.putRecord(token, newCounters());
+      await countersDynamoTable.putRecord(token, newCounter());
 
       return {
         statusCode: 200,
