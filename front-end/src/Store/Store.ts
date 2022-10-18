@@ -1,9 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {subtractorReducer} from '../Slices/SubtractorSlice';
+import {safestrReducer} from '../Slices/SafestrSlice';
 
 export const store = configureStore({
   reducer: {
-    subtractor: subtractorReducer,
+    safestr: safestrReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

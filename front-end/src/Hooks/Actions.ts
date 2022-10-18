@@ -1,8 +1,8 @@
-import {subtractorActions} from './../Slices/SubtractorSlice';
+import {safestrActions} from '../Slices/SafestrSlice';
 import {bindActionCreators} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
 
-const actions = {...subtractorActions};
+const actions = {...safestrActions};
 
 export const useActions = () => {
   const dispatch = useDispatch();
