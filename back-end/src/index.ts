@@ -1,4 +1,3 @@
-import {BackEndHandshakeLambda} from './lambdasHandlers/handshake-lambda';
 import {BackEndProcessLambda} from './lambdasHandlers/process-lambda';
 import {CoreS3Bucket} from 'core';
 import {CoreDynamoDb} from 'core';
@@ -15,7 +14,6 @@ import {CoreLambda} from 'core';
 import sleep = CoreCommonUtils.sleep;
 import archiveSourceCodeAndGetPath = CoreCommonUtils.archiveSourceCodeAndGetPath;
 import throwIfNull = CoreCommonUtils.throwIfNull;
-import handshakeLamdaHandler = BackEndHandshakeLambda.handshakeLambdaHandler;
 import processLamdaHandler = BackEndProcessLambda.processLambdaHandler;
 import log = CoreLog.log;
 import KeyValueStore = CoreDynamoDb.KeyValueStore;
@@ -23,7 +21,6 @@ import ICounter = InterfacesProjectSpecificInterfaces.ICounter;
 import counterTypeGuard = InterfacesProjectSpecificInterfaces.counterTypeGuard;
 import lambdaZipFileS3BucketName = InterfacesProjectSpecificConstants.lambdaZipFileS3BucketName;
 import counterDynamoTableName = InterfacesProjectSpecificConstants.counterDynamoTableName;
-import handshakeLambdaName = InterfacesProjectSpecificConstants.handshakeLambdaName;
 import processLambdaName = InterfacesProjectSpecificConstants.processLambdaName;
 import imageBucketName = InterfacesProjectSpecificConstants.imageBucketName;
 import apiGatewayName = InterfacesProjectSpecificConstants.apiGatewayName;
@@ -44,17 +41,6 @@ const initiate = async () => {
     false
   );
 
-  const handshakeLambda: Lambda = new Lambda(
-    handshakeLambdaName,
-    lambdaZipFileS3BucketName,
-    lambdaZipFilePath,
-    handshakeLamdaHandler,
-    60
-  );
-  await handshakeLambda.construct();
-  const handshakeLambdaArn = await handshakeLambda.getArn();
-  throwIfNull(handshakeLambdaArn);
-
   const processLambda: Lambda = new Lambda(
     processLambdaName,
     lambdaZipFileS3BucketName,
@@ -68,7 +54,6 @@ const initiate = async () => {
 
   const apiGateway = new ApiGateway(apiGatewayName);
   await apiGateway.construct();
-  await apiGateway.createNewResource('handshake', handshakeLambdaArn, 'POST');
   await apiGateway.createNewResource('process', processLambdaArn, 'POST');
   const apiUrl = await apiGateway.createDeployment();
 
@@ -86,16 +71,6 @@ const initiate = async () => {
 };
 
 const demolish = async () => {
-  const handshakeLambda: Lambda = new Lambda(
-    handshakeLambdaName,
-    // TODO: getRidOfParams
-    '/',
-    '/',
-    handshakeLamdaHandler,
-    60
-  );
-  await handshakeLambda.destroy();
-
   const processLambda: Lambda = new Lambda(
     processLambdaName,
     // TODO: getRidOfParams

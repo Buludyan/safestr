@@ -33,34 +33,16 @@ export namespace InterfacesProjectSpecificInterfaces {
     };
   };
 
-  export const tokenTypeGuard: 'tokenTypeGuard' = 'tokenTypeGuard';
-
-  export interface IToken extends IGuard<typeof tokenTypeGuard> {
-    token: string;
-  }
-
-  export const newToken = (token: string): IToken => {
-    return {
-      _guard: tokenTypeGuard,
-      token: token,
-    };
-  };
-
   export const imagePayloadTypeGuard: 'imagePayloadTypeGuard' =
     'imagePayloadTypeGuard';
 
   export interface IImagePayload extends IGuard<typeof imagePayloadTypeGuard> {
-    token: IToken;
     imageContent: string;
   }
 
-  export const newImagePayload = (
-    token: IToken,
-    imageContent: string
-  ): IImagePayload => {
+  export const newImagePayload = (imageContent: string): IImagePayload => {
     return {
       _guard: imagePayloadTypeGuard,
-      token: token,
       imageContent: imageContent,
     };
   };

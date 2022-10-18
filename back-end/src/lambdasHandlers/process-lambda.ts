@@ -5,16 +5,13 @@ import {CoreCommonUtils, CoreLog} from 'core';
 import {BackEndCounterStore} from '../counterStore';
 import {CoreS3Bucket} from 'core';
 import {CoreRekognition} from 'core';
+import {Logger} from 'tslog';
 
 export namespace BackEndProcessLambda {
   import isNull = CoreCommonUtils.isNull;
   import makeSureThatXIs = CoreCommonUtils.makeSureThatXIs;
-  import S3Bucket = CoreS3Bucket.S3Bucket;
   import IImagePayload = InterfacesProjectSpecificInterfaces.IImagePayload;
   import imagePayloadTypeGuard = InterfacesProjectSpecificInterfaces.imagePayloadTypeGuard;
-  import newCounterIncrement = InterfacesProjectSpecificInterfaces.newCounterIncrement;
-  import CounterStore = BackEndCounterStore.CounterStore;
-  import counterDynamoTableName = InterfacesProjectSpecificConstants.counterDynamoTableName;
   import imageBucketName = InterfacesProjectSpecificConstants.imageBucketName;
   import Rekognition = CoreRekognition.Rekognition;
   import log = CoreLog.log;
@@ -40,36 +37,23 @@ export namespace BackEndProcessLambda {
       const body = JSON.parse(event.body);
       makeSureThatXIs<IImagePayload>(body, imagePayloadTypeGuard);
 
-      const counterDynamoTable = new CounterStore(counterDynamoTableName);
-      const counterIncrementsRequestObject = newCounterIncrement({
-        imageIndexIncrement: 1,
-      });
-
-      const counter = await counterDynamoTable.incrementCounter(
-        body.token.token,
-        counterIncrementsRequestObject
-      );
-
       const imageContent = body.imageContent.replace(
-        /^data:image\/png;base64,/,
+        /data:image\/.*;base64,/,
         ''
       );
-
-      const buff = Buffer.from(imageContent, 'base64').toString('ascii');
-
-      const fileName = `${body.token.token}/${counter.lastImageIndexToAdd}.png`;
-      const imageBucket: S3Bucket = new S3Bucket(imageBucketName);
-      imageBucket.sendFileWithContent(fileName, buff, 'image/png', false);
-
       const rekognition = new Rekognition();
       rekognition.construct();
       const detectProtectiveEquipmentResult =
         await rekognition.detectProtectiveEquipment(
-          imageBucketName,
-          fileName,
+          Buffer.from(imageContent, 'base64'),
           ['FACE_COVER', 'HAND_COVER', 'HEAD_COVER'],
-          90
+          60
         );
+      log.info(
+        `Returned from detectProtectiveEquipment, result=${JSON.stringify(
+          detectProtectiveEquipmentResult
+        )}`
+      );
       rekognition.destroy();
 
       return {
